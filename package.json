@@ -25,8 +25,9 @@
   },
   "name": "backend",
   "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "start": "npx tsx --env-file=.env server.ts"
+    "start": "tsx watch server.ts"
   },
   "keywords": [],
   "author": "",
