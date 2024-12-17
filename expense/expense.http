@@ -1,0 +1,42 @@
+###
+GET http://localhost:3000/expenses?page=1c&pageSize=5&year=2024&month=12 
+
+###
+GET http://localhost:3000/expenses/gettotal?year=2024&month=12 
+
+###
+GET http://localhost:3000/expenses/675c90d0e241f844ea3767d0
+
+###
+POST http://localhost:3000/expenses
+Content-Type: application/json
+
+{
+    "title": "Mango",
+  "category": "Food",
+  "date": "2024-12-14T00:00:00.000Z",
+  "amount": 5.15
+}
+
+###
+PUT http://localhost:3000/expenses/675c93b65e1a0a4516109b90
+Content-Type: application/json
+
+{
+  "title": "Banana",
+  "category": "Food",
+  "date": "2024-12-14T00:00:00.000Z",
+  "amount": 3.59
+}
+
+###
+DELETE http://localhost:3000/expenses/675c9023e241f844ea3767cc
+
+###
+PUT http://localhost:3000/expenses/getallandgenerateembedding
+
+### Get Expense Summary
+GET http://localhost:3000/expenses/getexpensesummary?year=2024&month=12
+
+
+

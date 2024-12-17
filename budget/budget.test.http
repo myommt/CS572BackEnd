@@ -1,0 +1,17 @@
+POST http://localhost:3000/budgets/
+Content-Type: application/json
+
+{
+    "title": "phone bill",
+    "description": "payment for water",
+    "amount": 10,
+    "budget_id": "1"
+}
+
+###
+GET http://localhost:3000/budgets/gettotal
+
+###
+GET http://localhost:3000/budgets
+###
+GET http://localhost:3000/openaianalyses?year=2024&month=11

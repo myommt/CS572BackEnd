@@ -1,0 +1,31 @@
+POST http://localhost:3000/users/signup
+Content-Type: application/json
+
+{
+    "fullname":"John Doe",
+    "email":"John@gmail.com",
+    "password":"123456789"
+}
+
+###
+POST http://localhost:3000/users/signin
+Content-Type: application/json
+
+{
+    "email": "John@gmail.com",
+    "password": "123456789"
+}
+
+###
+
+POST http://localhost:3000/users/pictures
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzVjOTZkNDJkZmI0NDM0ZjY2MTg1NmQiLCJmdWxsbmFtZSI6IkpvaG4gRG9lIiwiZW1haWwiOiJKb2huQGdtYWlsLmNvbSIsImlhdCI6MTczNDEyMTIyOH0.bioBiwtwjw5QbF7J9ZDf5FhWK031nRGmGZTMXbYR9L0
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="profile_picture"; filename="Dan Ahimbisibwe.jpg"
+Content-Type: image/jpeg
+
+< ./Dan Ahimbisibwe.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
