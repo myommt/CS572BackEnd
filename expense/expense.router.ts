@@ -5,13 +5,13 @@ import { embeddingMiddleware } from './expense.middleware';
 
 const router = Router();
 
-router.get('/', get_expenses);
-router.post('/', embeddingMiddleware, post_expense);
-router.get('/gettotal', get_expensesCount);
+router.get('/', checkToken, get_expenses);
+router.post('/', checkToken, embeddingMiddleware, post_expense);
+router.get('/gettotal', checkToken, get_expensesCount);
 //router.put('/getallandgenerateembedding', getAllandgenerateEmbedding);//patching the embedding only
-router.get('/getexpensesummary', get_expenseSummary);
-router.get('/:expense_id', get_expense);
-router.put('/:expense_id', embeddingMiddleware, put_expense);
-router.delete('/:expense_id', delete_expense);
+router.get('/getexpensesummary', checkToken, get_expenseSummary);
+router.get('/:expense_id', checkToken, get_expense);
+router.put('/:expense_id', checkToken, embeddingMiddleware, put_expense);
+router.delete('/:expense_id', checkToken, delete_expense);
 
 export default router;

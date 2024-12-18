@@ -37,11 +37,11 @@ export const routerNotFoundHandler: RequestHandler = (req, res, next) => {
 };
 
 
-export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+export const errorHandler: ErrorRequestHandler<unknown, StandardResponse<string>, unknown, unknown> = (error, req, res, next) => {
     if (error instanceof ErrorWithStatus) {
-        res.status(error.status).json({ error: error.message });
+        res.status(error.status).json({ success: false, data: error.message });
     } else {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, data: error.message });
     }
 };
 

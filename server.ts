@@ -7,9 +7,9 @@ import userRoutes from './users/users.router';
 import budgetRoutes from './budget/budget.router';
 import { routerNotFoundHandler, errorHandler } from './utils/common';
 import { connect_db } from './db';
-//import { checkToken } from './users/users.middleware';
 import expenseRoutes from './expense/expense.router';
 import { combinedVectorAndAnalysis } from './utils/ai';
+import { checkToken } from './users/users.middleware';
 
 
 const app = express();
@@ -25,7 +25,7 @@ app.use('/budgets', budgetRoutes);
 
 app.use('/expenses', expenseRoutes);
 
-app.get('/openaianalyses', combinedVectorAndAnalysis);
+app.get('/openaianalyses', checkToken, combinedVectorAndAnalysis);
 
 app.use(routerNotFoundHandler);
 app.use(errorHandler);

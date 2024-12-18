@@ -1,11 +1,12 @@
 import { RequestHandler } from "express";
 import { generateEmbedding, StandardResponse } from "../utils/common";
 import { Expense, ExpenseModel, ExpenseSummary } from "./expense.model";
-import mongoose from "mongoose";
+import mongoose, { DeleteResult, UpdateWriteOpResult } from "mongoose";
 
 export const get_expenses: RequestHandler<unknown, StandardResponse<Expense[]>, unknown, { page: string, pageSize: string; year: string; month: string; }>
     = async (req, res, next) => {
         try {
+            if (!req.user?._id) { throw new Error('User ID is missing'); }
             const page = +req.query.page || 1;
             const pageSize = +req.query.pageSize || 20;
             const year = +req.query.year || new Date().getFullYear();
@@ -15,7 +16,7 @@ export const get_expenses: RequestHandler<unknown, StandardResponse<Expense[]>, 
             const endOfMonth = new Date(year, month, 1);
             const results: Expense[] = await ExpenseModel.aggregate([{
                 $match: {
-                    user_id: req.user?._id,
+                    user_id: new mongoose.Types.ObjectId(req.user._id),
                     date: { $gte: startOfMonth, $lt: endOfMonth }
                 }
             },
@@ -42,6 +43,7 @@ export const get_expenses: RequestHandler<unknown, StandardResponse<Expense[]>, 
 export const get_expensesCount: RequestHandler<unknown, StandardResponse<number>, unknown, { year: string; month: string; }>
     = async (req, res, next) => {
         try {
+            if (!req.user?._id) { throw new Error('User ID is missing'); }
             const year = +req.query.year || new Date().getFullYear();
             const month = +req.query.month || new Date().getMonth() + 1;
 
@@ -51,7 +53,7 @@ export const get_expensesCount: RequestHandler<unknown, StandardResponse<number>
             const total: { _id: null, total: number; }[] = await ExpenseModel.aggregate([
                 {
                     $match: {
-                        user_id: req.user?._id,
+                        user_id: new mongoose.Types.ObjectId(req.user._id),
                         date: { $gte: startOfMonth, $lt: endOfMonth }
                     }
                 }, { $group: { _id: null, total: { $sum: 1 } } }
@@ -67,11 +69,12 @@ export const get_expensesCount: RequestHandler<unknown, StandardResponse<number>
 export const get_expense: RequestHandler<{ expense_id: string; }, StandardResponse<Expense | null>, unknown, unknown>
     = async (req, res, next) => {
         try {
+            if (!req.user?._id) { throw new Error('User ID is missing'); }
             const { expense_id } = req.params;
             const result: Expense | null = await ExpenseModel.findOne(
                 {
                     _id: expense_id,
-                    user_id: req.user?._id
+                    user_id: new mongoose.Types.ObjectId(req.user._id),
                 });
             res.json({ success: true, data: result });
 
@@ -83,9 +86,10 @@ export const get_expense: RequestHandler<{ expense_id: string; }, StandardRespon
 export const post_expense: RequestHandler<unknown, StandardResponse<Expense>, Expense, unknown> =
     async (req, res, next) => {
         try {
-            const results = await ExpenseModel.create({
+            if (!req.user?._id) { throw new Error('User ID is missing'); }
+            const results: Expense = await ExpenseModel.create({
                 ...req.body,
-                user_id: req.user?._id,
+                user_id: new mongoose.Types.ObjectId(req.user._id),
                 expenseEmbedding: req.body.expenseEmbedding
             });
             res.json({ success: true, data: results });
@@ -96,11 +100,12 @@ export const post_expense: RequestHandler<unknown, StandardResponse<Expense>, Ex
 
 export const put_expense: RequestHandler<{ expense_id: string; }, StandardResponse<number>, Partial<Expense>, unknown> = async (req, res, next) => {
     try {
+        if (!req.user?._id) { throw new Error('User ID is missing'); }
         const { expense_id } = req.params;
-        const results = await ExpenseModel.updateOne(
+        const results: UpdateWriteOpResult = await ExpenseModel.updateOne(
             {
                 _id: expense_id,
-                user_id: req.user?._id
+                user_id: new mongoose.Types.ObjectId(req.user._id),
             },
             { $set: req.body }
         );
@@ -112,11 +117,12 @@ export const put_expense: RequestHandler<{ expense_id: string; }, StandardRespon
 
 export const delete_expense: RequestHandler<{ expense_id: string; }, StandardResponse<number>> = async (req, res, next) => {
     try {
+        if (!req.user?._id) { throw new Error('User ID is missing'); }
         const { expense_id } = req.params;
-        const results = await ExpenseModel.deleteOne(
+        const results: DeleteResult = await ExpenseModel.deleteOne(
             {
                 _id: expense_id,
-                user_id: req.user?._id
+                user_id: new mongoose.Types.ObjectId(req.user._id),
             });
         res.status(200).json({ success: true, data: results.deletedCount });
     } catch (err) {
@@ -126,6 +132,7 @@ export const delete_expense: RequestHandler<{ expense_id: string; }, StandardRes
 
 export const getAllandgenerateEmbedding: RequestHandler = async (req, res, next) => {
     try {
+
         const results: Expense[] = await ExpenseModel.aggregate([
             {
                 $match: {
@@ -163,7 +170,7 @@ export const getAllandgenerateEmbedding: RequestHandler = async (req, res, next)
 export const get_expenseSummary: RequestHandler<unknown, StandardResponse<ExpenseSummary[]>, unknown, { year: string; month: string; }>
     = async (req, res, next) => {
         try {
-
+            if (!req.user?._id) { throw new Error('User ID is missing'); }
             const year = +req.query.year || new Date().getFullYear();
             const month = +req.query.month || new Date().getMonth() + 1;
 
@@ -173,7 +180,7 @@ export const get_expenseSummary: RequestHandler<unknown, StandardResponse<Expens
             const expensesSummary: ExpenseSummary[] = await ExpenseModel.aggregate([
                 {
                     $match: {
-                        user_id: req.user?._id,
+                        user_id: new mongoose.Types.ObjectId(req.user._id),
                         date: { $gte: startOfMonth, $lt: endOfMonth }
                     }
                 },

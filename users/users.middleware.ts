@@ -4,6 +4,7 @@ import { ErrorWithStatus, Token } from "../utils/common";
 
 export const checkToken: RequestHandler = async (req, res, next) => {
     try {
+
         const authentication_header = req.headers['authorization'];
         if (!authentication_header) throw new ErrorWithStatus('No Token Found', 401);
 

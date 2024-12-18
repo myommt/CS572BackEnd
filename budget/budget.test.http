@@ -7,6 +7,12 @@ Content-Type: application/json
     "amount": 10,
     "budget_id": "1"
 }
+<<<<<<< HEAD
+###
+GET http://localhost:3000/budget/675e426d67f5596d513da562
+Content-Type: application/json
+
+=======
 
 ###
 GET http://localhost:3000/budgets/gettotal
@@ -15,3 +21,4 @@ GET http://localhost:3000/budgets/gettotal
 GET http://localhost:3000/budgets
 ###
 GET http://localhost:3000/openaianalyses?year=2024&month=11
+>>>>>>> main

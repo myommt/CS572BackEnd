@@ -3,13 +3,14 @@ import OpenAI from 'openai';
 import { Expense, ExpenseModel } from '../expense/expense.model';
 import { budget, budgetModel } from '../budget/budget.model';
 import { CombinedResults, generateEmbedding, StandardResponse, SummaryResponse } from './common';
+import mongoose from 'mongoose';
 const openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
 
 export const combinedVectorAndAnalysis: RequestHandler<unknown, StandardResponse<SummaryResponse>, unknown, { year: string; month: string; }> = async (req, res, next) => {
     try {
+        if (!req.user?._id) { throw new Error('User ID is missing'); }
 
-
-        const userId = req.user?._id;
+        const userId = new mongoose.Types.ObjectId(req.user._id);
         const year = +req.query.year || new Date().getFullYear();
         const month = +req.query.month || new Date().getMonth() + 1;
         const startOfMonth = new Date(year, month - 1, 1);
@@ -149,7 +150,7 @@ export const combinedVectorAndAnalysis: RequestHandler<unknown, StandardResponse
 
 
 
-async function get_expensesCount(startOfMonth: Date, endOfMonth: Date, userid?: string) {
+async function get_expensesCount(startOfMonth: Date, endOfMonth: Date, userid: mongoose.Types.ObjectId) {
     try {
         const total = await ExpenseModel.aggregate([
             {
@@ -169,7 +170,7 @@ async function get_expensesCount(startOfMonth: Date, endOfMonth: Date, userid?: 
     }
 }
 
-async function get_budgetCount(startOfMonth: Date, endOfMonth: Date, userid?: string) {
+async function get_budgetCount(startOfMonth: Date, endOfMonth: Date, userid: mongoose.Types.ObjectId) {
     try {
 
         const total = await budgetModel.aggregate([
